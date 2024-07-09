@@ -99,10 +99,10 @@ contributes:
         \renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
 
       template-partials:
-        - "../partials/toc.tex"
-        - "../partials/before-body.tex"
-        - "../partials/after-body.tex"
-        - "../partials/biblio.tex"
+        - "partials/toc.tex"
+        - "partials/before-body.tex"
+        - "partials/after-body.tex"
+        - "partials/biblio.tex"
       format-resources:
         - aft.cls
         - te.bst
