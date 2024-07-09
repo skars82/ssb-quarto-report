@@ -1,0 +1,24 @@
+% Add lists of figures and tables at the end of the document
+
+
+$if(lof)$
+\newpage
+\phantomsection % Correct the hyperlink location for TOC
+\addcontentsline{toc}{section}{Figurregister} % Add entry to TOC with correct page number
+\section*{Figurregister}
+\renewcommand{\listfigurename}{} % Remove the "List of Figures" title
+\vspace{-3em} % Adjust the vertical space as needed
+\listoffigures
+\thispagestyle{ssb-report-footer-header} % Ensure the page style is applied to the list of figures
+$endif$
+
+$if(lot)$
+\newpage
+\phantomsection % Correct the hyperlink location for TOC
+\addcontentsline{toc}{section}{Tabellregister} % Add entry to TOC with correct page number
+\section*{Tabellregister}
+\renewcommand{\listtablename}{} % Remove the "List of Tables" title
+\vspace{-3em} % Adjust the vertical space as needed
+\listoftables
+\thispagestyle{ssb-report-footer-header} % Ensure the page style is applied to the list of tables
+$endif$

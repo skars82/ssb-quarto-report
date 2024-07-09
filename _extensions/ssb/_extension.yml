@@ -1,0 +1,112 @@
+title: Statistics Norway Report Format
+author: Øyvind Bruer-Skarsbø
+version: 0.1.0
+contributes:
+  formats:
+    common:
+      code-overflow: wrap
+      toc: true
+      toc-title: Innhold
+      toc-depth: 2
+      lof: true
+      lot: true
+      number-sections: true
+      filters:
+        - color-text.lua
+      shortcodes:
+        - shortcodes.lua
+    docx:
+      reference-doc: custom-reference-doc.docx
+      highlight-style: github
+    pdf:
+      shift-heading-level-by: -1
+      titlepage-image: frontpage.pdf
+      documentclass: scrartcl
+      mainfont: "Open Sans"
+      fontsize: 10pt
+      linestretch: 1.5
+      header-right: true
+      colorlinks: true
+      urlcolor: ssb-green
+      citecolor: ssb-green
+      fig-align: left
+      fig-cap-location: top
+      fig-width: 6.5
+      fig-height: 4.5
+      geometry:
+        # Sets top and bottom margin 
+        - vmargin=20mm
+        # Set left and right margin
+        - hmargin=20mm
+        # Space between title and text
+        - headsep=5mm
+      biblio-style: te
+      cite-method: natbib
+      header-includes: |
+        \usepackage{geometry}
+        \usepackage{tikz}
+        \usepackage{fontspec}
+        \usepackage{sectsty}
+        \usepackage{fancyhdr}
+        \usepackage{textpos}
+        \usepackage{orcidlink}
+        \definecolor{mypink}{RGB}{219, 48, 122}
+        \usepackage{graphics}
+        \usepackage{titlesec}
+        \usepackage{xcolor}
+
+        % Define custom color using RGB values
+        \definecolor{ssb-green}{rgb}{0.102, 0.616, 0.286}
+
+        % Set URL link color
+        \hypersetup{
+          colorlinks=true,
+          urlcolor=customlinkcolor % Use the custom color
+        }
+
+        % Load tocloft package and set dot leaders for all TOC entries
+        \usepackage{tocloft}
+        \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+        \renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
+        \renewcommand{\cftsubsubsecleader}{\cftdotfill{\cftdotsep}}
+
+        % Bold H1 headers and their page numbers in the TOC
+        \renewcommand{\cftsecfont}{\bfseries}
+        \renewcommand{\cftsecpagefont}{\bfseries}
+
+        % Load Roboto Condensed Bold font from system fonts
+        \newfontfamily\roboto{Roboto Condensed}[BoldFont={Roboto Condensed Bold}]
+
+        % Custom section fonts and sizes using titlesec
+        \titleformat{\section}
+          {\roboto\bfseries\fontsize{18}{22}\selectfont}
+          {\thesection}{1em}{}
+        \titleformat{\subsection}
+          {\roboto\bfseries\fontsize{12}{22}\selectfont}
+          {\thesubsection}{1em}{}
+        \titleformat{\subsubsection}
+          {\roboto\bfseries\fontsize{11}{14}\selectfont}
+          {\thesubsubsection}{1em}{}
+        \titleformat{\paragraph}
+          {\roboto\bfseries\fontsize{11}{13}\selectfont}
+          {\theparagraph}{1em}{}
+        \titleformat{\subparagraph}
+          {\roboto\bfseries\fontsize{11}{13}\selectfont}
+          {\thesubparagraph}{1em}{}
+
+        % Redefine numbering for sections and subsections
+        \renewcommand{\thesection}{\arabic{section}.}
+        \renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+
+      template-partials:
+        - "../partials/toc.tex"
+        - "../partials/before-body.tex"
+        - "../partials/after-body.tex"
+        - "../partials/biblio.tex"
+      format-resources:
+        - aft.cls
+        - te.bst
+    html:
+      theme: custom.scss
+      # Use a CSL file to style (https://www.zotero.org/styles/)
+      csl: https://www.zotero.org/styles/journal-of-institutional-and-theoretical-economics

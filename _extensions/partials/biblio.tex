@@ -1,0 +1,8 @@
+% Ensure the references section starts on a new page
+\newpage
+\phantomsection
+\renewcommand{\refname}{Referanser} % For articles
+\renewcommand{\bibname}{Referanser} % For books and reports
+\addcontentsline{toc}{section}{Referanser}
+\bibliographystyle{te}
+\bibliography{bibliography} % Replace 'references' with the name of your .bib file without the .bib extension

@@ -1,0 +1,520 @@
+---
+title: "Tittel på SSB-rapport"
+subtitle: "Undertittel på SSB-rapport"
+approved-date: Godkjenningsdato
+approved-by: Navn på godkjenner
+rapportnr: "2024/XX"
+publisert-dato: 1. desember 2024
+isbn-t: XXXX-X
+isbn-e: YYYY-Y
+format:
+  ssb-pdf:
+    keep-tex: true  
+  ssb-html: default
+author:
+  - name: Forfatter1
+  - name: Forfatter2
+preface-no:  |
+  Forordet skal være på maksimalt 250 ord og kan inneholde følgende elementer:
+
+  Eventuell bakgrunn, informasjon om ev. tidligere versjoner, utgaver, og hvor disse finnes, informasjon om ev. prosjektstøtte, oppdragsgiver o.l., informasjon om ev. bidragsytere, ev. takksigelser, som bør begrenses og ikke omfatte interne medarbeidere og oppdragsgivere. 
+abstract-no: |
+  Sammendraget skal gi en kortfattet oversikt over innhold og resultater. Det kan inneholde følgende elementer: Hovedformål med rapporten/notatet/analysen, hovedkonklusjoner, ev. noe (veldig kort) om metoder og modeller som er brukt.
+
+  Sammendraget skal ikke overstige én A4-side.
+abstract-en: |
+  This is a summary of the report in english. Abstract er oversetting av Sammendraget. Gjelder bare for serien Rapporter.
+
+  Abstract skal ikke overstige én A4-side
+
+
+keywords: [SSB, rapport, demo]
+reference-section-title: References
+bibliography: bibliography.bib  
+---
+
+## Introduksjon {#sec-intro}
+
+Denne teksten er et eksempel på hvordan teksten til en SSB-rapport skrives med markdown og renderes med [Quarto](https://quarto.org/). Quarto er et open source verktøy for publisiering av dokumenter som kombinerer tekst og data-analyse. Det gir muligheten til å lage dynamiske rapporter, presentasjoner, nettsider og bøker med integrert kode.
+
+
+### Kom i gang
+
+For å bruke denne templaten kan du klone repoet og begynne å redigere på `template.qmd`. 
+
+```{.bash}
+git clone https://github.com/statisticsnorway/ssb-quarto-report.git
+```
+
+Deretter kan du kan gå inn i mappen `cd ssb-quarto-report` og rendere eksempelfilen:
+
+```{.bash}
+quarto preview ssb/template.qmd
+```
+
+Det gir deg en forhåndsvisning av dokumentet som oppdateres fortløpende når du gjør endringer i `template.qmd`-filen.
+
+#### Metadata
+
+De første endringene man gjør i `template.qmd` er typisk å endre metadataene som ligger i toppen av fila. Der oppgir du tittel, undertittel, forfattere, forord, godkjenningsdato, etc.. Verdiene som oppgis her vil bli lagt inn i den ferdig renderte pdf-en på de riktige stedene i dokumentet. Metadataene kan derfor se slik ut:
+
+```{.yml}
+title: "Kvantitative svar på kompliserte spørsmål"
+subtitle: "En spennende rapport fra SSB"
+approved-date: 1. januar 2025
+approved-by: Daniel Direktør
+rapportnr: "2025/11"
+publisert-dato: 1. desember 2024
+isbn-t: 9999-9
+isbn-e: 8888-8
+format:
+  ssb-pdf:
+    keep-tex: true  
+  ssb-html: default
+author:
+  - name: Ståle Statistiker
+```
+
+Hvis du gjør endringene over og trykker save så ser du at disse verdiene blir satt i forhåndsvisningen av pdf-en. Når du er fornøyd så kan du rendere den endelige versjonen ved å kjøre følende i terminalen:
+
+```{.bash}
+quarto render template.qmd
+```
+
+#### Skrive artikkel
+
+Å skrive selve artikkelen kan man gjøre ved å skrive markdown i `template.qmd`. Markdown-syntaxen er godt dokumentert i [Quart-manualen](https://quarto.org/docs/authoring/markdown-basics.html). Det er også greit å vite at Quarto bruker [Pandoc](https://pandoc.org/) under panseret.
+
+Måten dokumentet pdf-rapporten blir til på er at: 
+
+1. All informasjon^[Metadata og markdown] blir konvertert til formatet [Pandoc AST](https://pandoc.org/lua-filters.html)
+2. For generering av PDF blir Pandoc AST først konvertert til Latex, og deretter PDF.
+3. For generering av docx-filer blir Pandoc AST konvertert direkte til docx. 
+4. For generering av html blir Pandoc AST konvertert direkte til html.
+
+For de som ønsker å tilpasse templaten til sine behov, så må man derfor forholde seg til mellomformatet Pandoc AST, og hvis man ønsker at sluttproduktet skal være en pdf, så må man også ha basis kunnskap om Latex. Hvis man ønsker å gjøre endringer på Pandoc AST formatet direkte som en del av renderingen, så kan man skrive såkalte **filtre** eller **shortcodes** i Lua som prosesserer Pandoc AST direkte ved rendering. Men dette er kun nødvendig for avanserte brukere som ønsker å gjøre utvikling på templaten. 
+
+Av metadatene over ser vi at man kan velge å beholde den Latex-koden som generer pdf-fila, `keep-tex: true`. Det kan være nyttig for de som lurer på hvordan konvertering fra markdown, via AST, har blitt tolket som Latex. Man kan også bruke den til å manipulere Latex-koden direkte og deretter rendere.
+
+#### Hvem passer dette for? 
+
+Denne arbeidsflyten kan passe for de i SSB som skriver rapporter der data er en viktig del av innholdet. Siden denne måten å skrive på tillater forfatteren å skrive der man har tilgang til data, samtidig som man kan blande tekst, kode og output på en enkel måte. En stor fordel med dette er at rapporten kan genereres på samme måte som statistikk genereres, ved å kjøre tekstfiler. På den måten kan man versjonhåndtere dokumentet på GitHub, kjøre dokumentet på nytt hvis dataene endrer seg, og dokumentere tall og figurere som en del av skrivingen.  
+
+
+## Komponenter
+
+Når man skriver dokumenter skal man følge den visuelle profilen til SSB. Defor må tabeller, figurer, forklaringsbokser, og kildehenvisninger følge SSBs profil.  
+
+### Tabeller
+
+Å lage tabeller kan gjøres på mange forskjellige måter i et Quarto-dokument. Man kan lage tabeller ved å bruke R- og Python-biblioteker som produserer markdown, Latex eller bilder. Man kan også legge inn ren Latex i denne filen.
+
+#### Markdown
+
+Man kan lage en tabell i Excel og [transformere den til markdown](https://tabletomarkdown.com/convert-spreadsheet-to-markdown/), som Quarto kan rendere til pdf eller html. Man kan også bruke R- og Python-pakker som genererer markdown-tabeller. Denne koden genererer en enkel tabell:
+
+```{{r}}
+#| echo: false
+
+library(knitr)
+
+# Create a simple data frame
+df <- data.frame(
+  Name = c("John", "Jane", "Doe"),
+  Age = c(23, 35, 45),
+  Occupation = c("Engineer", "Doctor", "Artist")
+)
+
+# Convert the data frame to a markdown table
+markdown_table <- knitr::kable(df, format = "markdown")
+
+# Print the markdown table
+markdown_table
+```
+
+
+```{r}
+#| echo: false
+#| tbl-cap: En enkel tabell med markdown
+#| label: tbl-md
+
+library(knitr)
+
+# Create a simple data frame
+df <- data.frame(
+  Name = c("John", "Jane", "Doe"),
+  Age = c(23, 35, 45),
+  Occupation = c("Engineer", "Doctor", "Artist")
+)
+
+# Convert the data frame to a markdown table
+markdown_table <- knitr::kable(df, format = "markdown")
+
+# Print the markdown table
+markdown_table
+```
+
+Vi kunne også laget en tabell uten pakker. Denne teksten genererer også en enkel makrdown-tabell:
+
+```{{markdown}}
+| Default | Left | Right | Center |
+|--------:|-----:|------:|:------:|
+| 12      | 12   |    12 |   12   |
+| 123     | 123  |   123 |  123   |
+| 1       | 1    |     1 |   1    |
+: Et annet eksempel med rå markdown {#tbl-md1 tbl-colwidths="[25,25]"}
+```
+
+
+| Default | Left | Right | Center |
+|--------:|-----:|------:|:------:|
+| 12      | 12   |    12 |   12   |
+| 123     | 123  |   123 |  123   |
+| 1       | 1    |     1 |   1    |
+: Et annet eksempel med rå markdown {#tbl-md1 tbl-colwidths="[25,25]"}
+
+Vi kan referere til tabellene ved å bruke @tbl-md, @tbl-md1. De blir også automatisk nummerert og listet ut i Tabellregisteret på slutten av dokumentet.
+
+
+#### Latex
+
+Man kan også bruke Latex til å generere tabeller, enten vha rå Latex eller R- eller Python-pakker. Her er et eksempel på hvordan man kan bruke R-pakken [kableExtra](https://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf) for enkelt lage avanserte Latex-tabeller:
+
+```{r}
+#| tbl-cap: En avansert tabell med Latex/booktabs
+#| label: tbl-latex
+
+library(kableExtra)
+dt <- mtcars[1:5, 1:6]
+kbl(dt)
+
+long_dt <- rbind(mtcars, mtcars)
+kbl(long_dt, longtable = T, booktabs = T) %>%
+  add_header_above(c(" ", "Group 1" = 5, "Group 2" = 6)) %>%
+  kable_styling(latex_options = c("repeat_header", "striped")) %>%
+  footnote(general = "Here is a general comments of the table. ",
+          number = c("Footnote 1; ", "Footnote 2; "),
+          alphabet = c("Footnote A; ", "Footnote B; "),
+          symbol = c("Footnote Symbol 1; ", "Footnote Symbol 2")
+          )
+```
+
+Her er et eksempel på hvordan man bruker rå Latex direkte i dokumentet:
+
+
+```{=latex}
+\begin{table}[]
+\begin{tabular}{llllllll}
+\hline
+ & \multicolumn{3}{l}{\textbf{Midtstilt   med strek under}} & \multicolumn{4}{l}{\textbf{Midtstilt   med strek under}}      \\ \cline{2-8} 
+ & \textbf{2002}     & \textbf{2005}     & \textbf{2010}    & \textbf{2011} & \textbf{2012} & \textbf{2013} & \textbf{2014} \\ \hline
+\textbf{Tabelltekst} & 6 287 & 6 522 & 7 940 & 8 589 & 9 625 & 9 382 & 56,7 \\
+\textbf{Tabelltekst} & 3 353 & 3 648 & 4 509 & 5 065 & 5 950 & 5 688 & 40,1 \\
+\textbf{Tabelltekst} & 2 934 & 2 874 & 3 431 & 3 524 & 3 675 & 3 694 & 33,0 \\ \hline
+\end{tabular}
+\end{table}
+```
+
+### Figurer
+
+Figurere kan hentes inn som bilder eller genereres fra kode. 
+
+#### Bilder
+
+![Et eksempel på en graf produsert med Matplotlib](./fig1.pdf){#fig-example1}
+
+#### Python
+
+Vi kan produsere figurer med kode. F.eks. kan man bruke Matplotlib til dette:
+
+```{{python}}
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Sample data
+data = {
+    'Category': ['A', 'B', 'C', 'D'],
+    'Value': [23, 45, 56, 78]
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Plotting the data
+plt.figure(figsize=(10, 6))
+plt.bar(df['Category'], df['Value'], color='skyblue')
+plt.xlabel('Category')
+plt.ylabel('Value')
+plt.title('Sample Bar Plot')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+
+# Show plot
+plt.show()
+```
+
+ @fig-example1 viser at ....
+
+![Et eksempel på en graf produsert med Matplotlib](./fig1.pdf){#fig-example1}
+
+#### R
+
+```{r}
+library(ggplot2)
+library(showtext)
+
+# Example: Load the Roboto font
+font_add_google("Roboto", "roboto")
+showtext_auto()
+
+data <- data.frame(
+  Year = rep(2000:2020, 2),
+  Value = c(rnorm(21, mean = 50, sd = 10), rnorm(21, mean = 60, sd = 15)),
+  Group = rep(c("Group A", "Group B"), each = 21)
+)
+
+ggplot(data, aes(x = Year, y = Value, color = Group)) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  scale_color_manual(values = c("#1f78b4", "#33a02c")) + # Customize colors
+  theme_minimal(base_family = "roboto") +
+  theme(
+    text = element_text(size = 12),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    legend.title = element_blank(),
+    legend.position = "bottom",
+    panel.grid.major = element_line(color = "grey80"),
+    panel.grid.minor = element_line(color = "grey90"),
+    plot.title = element_text(size = 16, face = "bold"),
+    plot.subtitle = element_text(size = 14)
+  ) +
+  labs(
+    title = "Statistics Norway Styled Line Chart",
+    subtitle = "Sample Data from 2000 to 2020",
+    x = "Year",
+    y = "Value"
+  )
+
+
+
+```
+
+
+### Referanser
+
+### Forklaringsbokser
+
+::: {.callout-note}
+
+## Forklaringsboks
+
+Forklaringsboks er nyttig for oppsummere et fenomen. 
+
+:::
+
+
+
+## Referanser
+
+Vi kan referere til annen litteratur ved å legge inn informasjon i `bibliography.bib`-fila og referere til de i teksten med en `@` foran etterpå. F.eks. skrev @bruer2022sykefravaer og @von2021modeling noen interessante artikler for noen år siden. 
+
+Strukturen til `bibliography.bib` er slik:
+
+```{{bash}
+@article{bruer2022sykefravaer,
+  title={Sykefrav{\ae}r og frafall fra arbeidsmarkedet. Betydningen av sammensetningen av sykemeldte},
+  author={Bruer-Skarsb{\o}, {\O}yvind and Vigtel, Trond Christian},
+  year={2022},
+  publisher={Statistisk sentralbyr{\aa}}
+}
+
+@article{von2021modeling,
+  title={Modeling R\&D spillovers to productivity: The effects of tax credits},
+  author={von Brasch, Thomas and Cappelen, {\AA}dne and Hungnes, H{\aa}vard and Skjerpen, Terje},
+  journal={Economic Modelling},
+  volume={101},
+  pages={105545},
+  year={2021},
+  publisher={Elsevier}
+}
+```
+
+## About Quarto Extensions formats And Quarto Journals Article
+
+First, please get familiar with the following resources: 
+
+- [Creating Formats](https://quarto.org/docs/extensions/formats.html) in Quarto as part of the [Extensions](https://quarto.org/docs/extensions/) mechanism.
+- [Journals Articles](https://quarto.org/docs/journals/) for Quarto.
+
+## Structure of this repository
+
+Everything for the extensions is in `_extensions`. See Quarto doc for details. 
+
+- In `partials`, you'll find the `.tex` partials that can be used and should be removed or tweaked,s
+
+- Your extension can make shortcodes and lua filters available. This document shows the effect of the one provided in the `aft` format. 
+
+- `aft` format sets some defaults which are different from `pdf` or `html`, link setting links to URL in read inside PDF output.
+
+Source repository for this template format can found on [Github](https://github.com/quarto-journals/article-format-template)
+
+
+### `_extensions\aft` 
+
+In this folder you'll find everything that defines the extensions which could be installed using `quarto install extension` or be part of the template when using `quarto use template`
+
+Format Metadata
+  ~ This is in `_extension.yml` is where all the metadata about the format are defined so that Quarto knows what to use.
+  Adapt this file for you own template.
+
+Partials
+  ~ In `partials`, there are the `.tex` files that will be used as Pandoc's template. We provide here all the partials supported by Quarto and custom one for this format. Quarto allows to provide partials to ease the process of tweaking the default latex Pandoc's template and keeping it up to date.  
+    This template repo contains all the relevant partials that you can use with Quarto _as example_. We only tweaked `title.tex` to show the usage of a custom partials called `_custom.tex`.  
+    **Only keep the partials that you need to tweak for the format you are creating**
+
+    If you need to completely change the default template (i.g customizing partials is not enough), then you need to provide your own template to Pandoc based on [`template.tex`](https://github.com/quarto-dev/quarto-cli/blob/main/src/resources/formats/pdf/pandoc/template.tex) and also using partials or not. This can be provided using the `template` YAML key in `_extension.yml` for Quarto to use it. 
+
+    This is considered advanced configuration as it will be harder to maintain than only using partials but could be required for some specific format. Be aware that this may lead to loose some Pandoc or Quarto features tied to default `template.tex` content if you remove some specific parts.
+
+Lua Filters
+  ~ Most of the time, custom formats will need Lua filters to provide specific features like cross format supports or provides custom shortcodes through the Quarto extension mechanism. Those filters will be available to the user and could be used in the custom formats (according to `_extensions` metadata). 
+    We have provided two examples: 
+
+    - `color-text.lua`, a Lua filter used to add color to inline text for PDF and HTML outputs using the same Markdown syntax
+    - `shorcodes.lua`, a Lua filter which follow [Quarto custom shortcodes](https://quarto.org/docs/authoring/shortcodes.html#custom-shortcodes) guidelines to provide a `{{< LaTeX >}}` shortcode to nicely print LaTeX in PDF and HTML. 
+
+    **Remove or replace with your own Lua filters**
+
+Format resources
+
+  ~ Resources required by the format needs to be available. We have provided two examples: 
+
+    - `te.bst` is a biblio style file for demo. It has been downloaded from https://www.economics.utoronto.ca/osborne/latex/TEBST.HTM (http://econtheory.org/technical/te.bst) - Licence [LPPL](https://www.latex-project.org/lppl/)
+    - `aft.cls` is a dummy class file for this example format. It is a copy of official `article.cls`, the one provided in LaTeX installation (i.e at `kpsewhich article.cls`) and renamed as example (Licence LaTeX Project Public License)
+    - `custom.scss` is a style file to have a custom theme for our HTML format so that our Lua filter feature `color-tex.lua` works.
+
+    Those files are referenced within the `_extension.yml` to be used with our example format.
+
+    **Remove and replace with your own resources**
+
+`.quartoignore`
+
+  ~ Sometimes it is useful to have some files only needed for reference or for development. They should be available in the source repository but not downloaded to the user when `quarto use template` is used.
+
+    **Use `.quartoignore` to register such file and folder (one file or folder per line)**
+
+`style-guide` folder
+
+  ~ For `quarto-journals` format, use `style-guide` folder to include any documentation and resourced used for format creation, like a journal style guide or original `.tex` template. This folder is already added in `.quartoignore` in this example repo.
+
+    **Remove, rename or add to this folder**
+
+`template.qmd`
+
+  ~ This file is the template document that shows how to use the custom format. It will be downloaded with other resource by `quarto use template`, and even offered to be renamed if the name `template.qmd` is used. 
+
+    This file will usually use the custom format (here `aft-pdf` and `aft-html`) and show how to use the template. When you'll copy this template, you should be able to render this document to the demo format. 
+
+    **Adapt this file to provide a suitable template for your custom format**
+
+Other files
+
+  ~ Other files are needed by the template and are usually user provided - they are not part of the custom format. 
+
+    Here `bibliography.bib` is here to demo the usage of the bst file from the custom format.
+
+    **Remove this file and provide a suitable one for your template**
+
+{{< pagebreak >}}
+
+## Checklist: Creating a custom format
+
+Here is the checklist to help you know what to modify:
+
+- Read the resources mentioned at the top,
+- Use this template repo to create a new repository for your format (Click on "Use this template" to create new github repo)
+- Once you are acquainted with the content, remove the resources that are there only as example (see above)
+- Update README by replacing `aft` and `Article Format Template` mentions for your journal format
+- Keep only the template partials that you need to tweak, and add custom ones if needed
+- Add any Lua filters for shortcodes and other that would be useful to create the expected output format
+- Add any external resource your format will need, and that should be part of the extension format that will be downloaded,
+- Check `_extension.yml` is updated correctly
+- Modify the skeleton `template.qmd` to your format and add any required resources to be downloaded to user.
+- Check `.quartoignore` is updated which everything that should not be downloaded.
+- Publish a demo of you format to github pages of the repo by using `quarto publish` command 
+
+## Demo of some features found in this demo journal template
+
+### Shortcode demo {#sec-shortcode}
+
+PDF are rendered using {{< latex >}} but it is best if one can use a Markdown syntax for cross format support.
+
+`{{< latex >}}` used in source is a shortcode syntax where the shortcode is included in the extension folder `_extensions`
+
+### Code chunk {#sec-chunks}
+
+This format hide chunks by default as option has been set in `_extension.yml` file.
+
+```{.r}
+#| prompt: true
+# Loading some data but this chunk won't be shown.
+data("quine", package = "MASS")
+```
+
+But you can set `echo` option to `true` locally in the chunk
+
+```{.r}
+#| echo: true
+m_pois <- glm(Days ~ (Eth + Sex + Age + Lrn)^2, data = quine, family = poisson)
+summary(m_pois)
+```
+
+### Using tables
+
+This is how you use tables and reference them:
+
+| Område   | kolonne1                                                         | kolonne2                                          |
+| -------- | ---------------------------------------------------------------- | ------------------------------------------------- |
+| Datasett | navn                                                             | inneholder personopplysinger                      |
+| Datasett | beskrivelse                                                      | Verdivurdering                                    |
+| Datasett | populasjon                                                       | bruksrestriksjoner (hvis relevant)                |
+| Datasett | versjon                                                          | bruksrestriksjonsdato (hvis relevant)             |
+| Datasett | versjonsbeskrivelse (ikke relevant for versjon 1)                | datatilstand                                      |
+| Datasett | geografisk dekningsområde                                        | status                                            |
+| Datasett |                                                                  | enhetstype                                        |
+| Datasett |                                                                  | inneholder dato fom                               |
+| Datasett |                                                                  | inneholder dato tom                               |
+| Datasett |                                                                  | eier                                              |
+| Datasett |                                                                  | versjon                                           |
+| Datasett |                                                                  | datakilde                                         |
+| Datasett |                                                                  | temporalitetstype                                 |
+| Datasett |                                                                  | statistikkområde                                  |
+| Datasett |                                                                  | nøkkelord                                         |
+| Variabel | navn                                                             | definisjonURI/definitionUri                       |
+: Et eksempel på en tabell {#tbl-example}
+
+
+Du kryssreferer til @tbl-example på denne måten. 
+
+
+### Text color {#sec-summary}
+
+Our format makes applying color on inline text possible using the `[content]{color=<name>}` syntax. Let's see an example.
+
+Here we are using a special feature of our format which is the coloring because [pink is a **nice** color]{color=mypink}.
+
+This is possible thanks to the Lua Filter included in the custom extension format.
+
+### Using references {.unnumbered}
+
+I did not read this book  but it must be interesting. 
+
+Differences between `aft-html` and `aft-pdf`: 
+
+* For the HTML format, we are using Pandoc citeproc to include the bibliography. Here `reference-section-title` controls the title for the chapter that will be used.
+* For the PDF format, `natbib` is used by default and the bibliography is included with a title by the LaTeX template.
+
+## Appendix {.appendix .unnumbered}
+
+I am grateful for the insightful comments offered by the anonymous peer reviewers at Books & Texts. The generosity and expertise of one and all have improved this study in innumerable ways and saved me from many errors; those that inevitably remain are entirely my own responsibility.

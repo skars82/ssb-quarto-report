@@ -1,0 +1,176 @@
+% Titlepage
+$if(beamer)$
+    \frame{\titlepage}
+$else$
+
+% Definerer font som skal brukes i tittel og overskrifter (bold)   
+
+    \begin{titlepage}
+        \newgeometry{top=2cm, bottom=2cm, left=2cm, right=2cm} % Adjust margins as needed
+
+        % Background image
+        \begin{tikzpicture}[remember picture, overlay]
+            \node[inner sep=0pt] at (current page.center) {\includegraphics[width=\paperwidth,height=\paperheight]{$titlepage-image$}};
+        \end{tikzpicture}
+
+        % Foreground text
+        \begin{tikzpicture}[remember picture, overlay]
+            \node[align=center, text opacity=1, fill opacity=0] at (current page.center) {
+                \begin{minipage}{\textwidth}
+                    \vfill % Ensure vertical centering
+
+                    % Title
+                    \begin{flushleft}
+                        \hspace*{-0.45cm} % Adjust this value to move the text to the right
+                        \vspace*{-0cm} % Adjust this value to move the text upwards or downwards
+                        {\roboto\textbf{\fontsize{40}{48}\selectfont $title$}}
+                    \end{flushleft}
+
+                    % Subtitle
+                    \begin{flushleft}
+                        \hspace*{-0.45cm} % Adjust this value to move the text to the right
+                        \vspace*{5cm} % Adjust this value to move the text upwards or downwards
+                        {\fontsize{14}{18}\selectfont $subtitle$}
+                    \end{flushleft}
+
+                    % Authors and Date
+                    \begin{flushleft}
+                        \hspace*{2cm} % Adjust this value to move the text to the right
+                        \vspace*{11cm} % Adjust this value to move the text upwards or downwards
+                        {\fontsize{10}{12}\selectfont \textsf{$for(author)$$author$$sep$, $endfor$}}
+                        \vspace*{2cm} % Adjust this value to move the text upwards or downwards
+                        {\Large \textsf{$date$}}
+                    \end{flushleft}
+
+                    \vfill
+                \end{minipage}
+            };
+        \end{tikzpicture}
+
+        % Legger inn rapportnummer
+        $if(rapportnr)$
+        \begin{textblock}{3}(-0.1 ,12.5) % Adjust the coordinates (1.4, 14) to place the text within the page
+            \rotatebox{270}{\fontsize{9}{11}\selectfont $rapportnr$}
+        \end{textblock}
+        $endif$
+
+
+    \end{titlepage}
+    \restoregeometry
+
+    $endif$
+
+    
+  
+% Øyvind lager en kolofon-side
+\newpage
+\thispagestyle{empty}
+
+I serien Rapporter publiseres analyser og kommenterte statistiske resultater fra ulike undersøkelser. Undersøkelser inkluderer både utvalgsundersøkelser, tellinger og registerbaserte undersøkelser.
+
+\vskip 34em
+
+\textcopyright
+Statistisk sentralbyrå
+\newline
+Ved bruk av materiale fra denne publikasjonen skal Statistisk sentralbyrå oppgis som kilde.
+
+\vskip 1em
+
+Publisert: $publisert-dato$
+
+\vskip 1em
+
+ISBN 978-82-587-$isbn-t$ (trykt)
+\newline
+ISBN 978-82-587-$isbn-e$ (elektronisk)
+\newline
+ISSN 0806-2056
+
+\vskip 0.5em
+\rule{\textwidth}{0.4pt}
+\vskip 0.5em
+\rule{\textwidth}{0.4pt}
+
+\noindent
+\textbf{Standardtegn i tabeller} \hfill \textbf{Symbol}
+\newline
+\rule{\textwidth}{0.4pt}
+
+\noindent
+\textbf{Ikke mulig oppgi tall} \hfill \textbf{.}
+\newline
+Tall finnes ikke på dette tidspunktet fordi kategorien ikke var i bruk da tallene ble samlet inn.
+\newline
+\rule{\textwidth}{0.4pt}
+
+\noindent
+\textbf{Tallgrunnlag mangler} \hfill \textbf{..}
+\newline
+Tall er ikke kommet inn i våre databaser eller er for usikre til å publiseres.
+\newline
+\rule{\textwidth}{0.4pt}
+
+\noindent
+\textbf{Vises ikke av konfidensialitetshensyn} \hfill \textbf{:}
+\newline
+Tall publiseres ikke for å unngå å identifisere personer eller virksomheter.
+\newline
+\rule{\textwidth}{0.4pt}
+
+\noindent
+\textbf{Desimalskilletegn} \hfill \textbf{,}
+\newline
+\rule{\textwidth}{0.4pt}
+
+\clearpage
+
+
+% Defines the header and footer used in the chapters
+\fancypagestyle{ssb-report-footer-header}{
+    \rhead{\fontsize{9}{11}\selectfont $title$}
+    \lhead{\fontsize{9}{11}\selectfont Rapporter $rapportnr$}
+    \fancyfoot[C]{\fontsize{9}{11}\selectfont \thepage} % Page number in the center
+    \renewcommand{\headrulewidth}{0.0pt} % Thickness of the header line
+    \renewcommand{\footrulewidth}{0.0pt} % Thickness of the footer line
+}
+
+
+% Apply the custom page style to the entire document
+\pagestyle{ssb-report-footer-header}
+
+
+
+
+% Øyvind lager Forord
+\newpage
+\section*{Forord}
+\addcontentsline{toc}{section}{Forord}
+$if(preface-no)$
+$preface-no$
+\vskip 2em
+Statistisk sentralbyrå, {$approved-date$}
+\vskip 1em
+$approved-by$
+$else$
+Skriv inn forordet her. Måten du gjør det på er legge det inn i yaml-metadatene under variabelen: forord: <teksten inn her>
+$endif$
+\clearpage
+
+\newpage
+\section*{Sammendrag}
+\addcontentsline{toc}{section}{Sammendrag}
+$if(abstract-no)$
+$abstract-no$
+\newpage
+$endif$
+
+\section*{Abstract}
+\addcontentsline{toc}{section}{Abstract}
+$if(abstract-en)$
+$abstract-en$
+\newpage
+$endif$
+
+
+
